@@ -1,32 +1,42 @@
 import pygame
 from game.game_engine import GameEngine
 
-# Initialize pygame/Start application
+
 pygame.init()
 
-# Screen dimensions
 WIDTH, HEIGHT = 800, 400
 SCREEN = pygame.display.set_mode((WIDTH, HEIGHT))
 pygame.display.set_caption("Endless Runner - Pygame Version")
 
-# Colors
 SKY = (200, 220, 240)
 
-# Clock
 clock = pygame.time.Clock()
 FPS = 60
 
-# Game loop
-engine = GameEngine(WIDTH, HEIGHT)
 
 def main():
+    engine = GameEngine(WIDTH, HEIGHT)
     running = True
+
     while running:
-        SCREEN.fill(SKY)
         for event in pygame.event.get():
+
             if event.type == pygame.QUIT:
                 running = False
-            engine.handle_event(event)
+
+            elif event.type == pygame.KEYDOWN:
+
+                if engine.game_over:
+                    if event.key in (
+                        pygame.K_SPACE,
+                        pygame.K_RETURN,
+                        pygame.K_ESCAPE
+                    ):
+                        running = False
+                else:
+                    engine.handle_event(event)
+
+        SCREEN.fill(SKY)
 
         engine.handle_input()
         engine.update()
@@ -36,6 +46,7 @@ def main():
         clock.tick(FPS)
 
     pygame.quit()
+
 
 if __name__ == "__main__":
     main()

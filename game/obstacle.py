@@ -19,4 +19,9 @@ class Obstacle:
         return self.x + self.width < 0
 
     def rect(self):
-        return pygame.Rect(self.x, self.y, self.width, self.height)
+        return pygame.Rect(
+            self.x,
+            self.y,
+            self.width,
+            self.height
+        )
