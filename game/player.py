@@ -2,6 +2,7 @@ import pygame
 
 
 class Player:
+
     def __init__(self, x, ground_y, width=30, height=40):
         self.x = x
         self.ground_y = ground_y
@@ -14,11 +15,13 @@ class Player:
         self.on_ground = True
 
     def jump(self):
+
         if self.on_ground:
             self.vy = self.jump_strength
             self.on_ground = False
 
     def update(self):
+
         self.vy += self.gravity
         self.y += self.vy
 
@@ -30,6 +33,7 @@ class Player:
             self.on_ground = True
 
     def rect(self):
+
         return pygame.Rect(
             self.x,
             self.y,

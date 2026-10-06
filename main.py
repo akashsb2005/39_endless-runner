@@ -1,52 +1,44 @@
 import pygame
+
 from game.game_engine import GameEngine
 
 
 pygame.init()
 
-WIDTH, HEIGHT = 800, 400
-SCREEN = pygame.display.set_mode((WIDTH, HEIGHT))
-pygame.display.set_caption("Endless Runner - Pygame Version")
-
-SKY = (200, 220, 240)
-
-clock = pygame.time.Clock()
+WIDTH = 800
+HEIGHT = 400
 FPS = 60
 
+screen = pygame.display.set_mode((WIDTH, HEIGHT))
+pygame.display.set_caption("Endless Runner")
 
-def main():
-    engine = GameEngine(WIDTH, HEIGHT)
-    running = True
+clock = pygame.time.Clock()
 
-    while running:
-        for event in pygame.event.get():
+game = GameEngine(WIDTH, HEIGHT)
 
-            if event.type == pygame.QUIT:
-                running = False
+running = True
 
-            elif event.type == pygame.KEYDOWN:
+while running:
 
-                if engine.game_over:
-                    if event.key in (
-                        pygame.K_SPACE,
-                        pygame.K_RETURN,
-                        pygame.K_ESCAPE
-                    ):
-                        running = False
-                else:
-                    engine.handle_event(event)
+    for event in pygame.event.get():
 
-        SCREEN.fill(SKY)
+        if event.type == pygame.QUIT:
+            running = False
+            continue
 
-        engine.handle_input()
-        engine.update()
-        engine.render(SCREEN)
+        result = game.handle_event(event)
 
-        pygame.display.flip()
-        clock.tick(FPS)
+        if result == "quit":
+            running = False
 
-    pygame.quit()
+    game.update()
 
+    screen.fill((220, 240, 255))
 
-if __name__ == "__main__":
-    main()
+    game.render(screen)
+
+    pygame.display.flip()
+
+    clock.tick(FPS)
+
+pygame.quit()
