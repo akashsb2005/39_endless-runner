@@ -1,4 +1,5 @@
 import pygame
+from pathlib import Path
 
 from .player import Player
 from .obstacle import Obstacle
@@ -100,6 +101,37 @@ class GameEngine:
         self.final_score = 0
         self.selecting_difficulty = False
 
+        self.jump_sound = None
+        self.score_sound = None
+        self.game_over_sound = None
+
+        try:
+            if pygame.mixer.get_init() is None:
+                pygame.mixer.init()
+
+            sound_directory = (
+                Path(__file__).resolve().parent.parent
+                / "assets"
+                / "sounds"
+            )
+
+            self.jump_sound = pygame.mixer.Sound(
+                str(sound_directory / "jump.wav")
+            )
+
+            self.score_sound = pygame.mixer.Sound(
+                str(sound_directory / "score.wav")
+            )
+
+            self.game_over_sound = pygame.mixer.Sound(
+                str(sound_directory / "game_over.wav")
+            )
+
+        except (pygame.error, FileNotFoundError, OSError):
+            self.jump_sound = None
+            self.score_sound = None
+            self.game_over_sound = None
+
     def handle_event(self, event):
 
         if event.type != pygame.KEYDOWN:
@@ -156,7 +188,9 @@ class GameEngine:
             pygame.K_UP,
             pygame.K_w
         ):
-            self.player.jump()
+            if self.player.jump():
+                if self.jump_sound is not None:
+                    self.jump_sound.play()
 
         return None
 
@@ -230,6 +264,9 @@ class GameEngine:
                 self.game_over = True
                 self.final_score = self.score
 
+                if self.game_over_sound is not None:
+                    self.game_over_sound.play()
+
                 return
 
         for obstacle in self.obstacles:
@@ -241,6 +278,9 @@ class GameEngine:
 
                 obstacle.scored = True
                 self.score += 1
+
+                if self.score_sound is not None:
+                    self.score_sound.play()
 
         self.obstacles = [
             obstacle
