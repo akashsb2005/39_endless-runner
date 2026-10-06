@@ -1,8 +1,10 @@
 import pygame
 
+
 class Obstacle:
     def __init__(self, x, ground_y, speed, width=25, height=40):
         self.x = x
+        self.previous_x = x
         self.width = width
         self.height = height
         self.y = ground_y - height
@@ -10,6 +12,7 @@ class Obstacle:
         self.scored = False
 
     def move(self):
+        self.previous_x = self.x
         self.x -= self.speed
 
     def off_screen(self):

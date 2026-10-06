@@ -20,6 +20,7 @@ class GameEngine:
         # NOTE: speed keeps climbing every frame with no ceiling. See
         # Task 1 in the README for why that eventually breaks collision.
         self.speed_increase_per_frame = 0.003
+        self.max_speed = 12
 
         self.spawn_interval = 70  # frames between obstacle spawns
         self._spawn_timer = 0
@@ -43,7 +44,10 @@ class GameEngine:
         if self.game_over:
             return
 
-        self.speed += self.speed_increase_per_frame
+        self.speed = min(
+            self.speed + self.speed_increase_per_frame,
+            self.max_speed
+)
         self.player.update()
 
         self._spawn_timer += 1
